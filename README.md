@@ -43,13 +43,13 @@ Options:
 
 This program uses the [PyGithub api](https://pygithub.readthedocs.io/en/latest/reference.html)
 
-install it as follows:
+to install that requirement:
 
 ````
 sudo pip3 install PyGitHub
 ````
 
-otherwise it uses plain python3.
+Now you should be ready to run the script in this repository.
 
 
 ### what can be improved?

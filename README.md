@@ -3,6 +3,8 @@
 
 This python3 program scans your github PR's and notifies you if there were new or modified PR comments (that one is for people like me who didn't manage to configure gitbub notifications - there is always too many or to few of them).
 
+### Usage
+
 The prgram scans the github repositories of a particular user once every fifteen minutes (by default).
 It writes an HTML report and pops it up in the default web browser if any PR comments were modified/added/deleted.
 
@@ -37,6 +39,22 @@ Options:
 
 ```
 
+### Installation 
 
+This program uses the [PyGithub api](https://pygithub.readthedocs.io/en/latest/reference.html)
+
+install it as follows:
+
+````
+sudo pip3 install PyGitHub
+````
+
+otherwise it uses plain python3.
+
+
+### what can be improved?
+
+I tried to used googleapi in order to send emails to myself, but that didn't work out.
+Anyway, poping up a report in the current browser is good enough for me.
 
 

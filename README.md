@@ -1,7 +1,7 @@
 
-## script for managing gitub comments.
+## Script for managing github pull request comments.
 
-This python3 program scans your github PR's and notifies you if there were new or modified PR comments (that one is for people like me who didn't manage to configure gitbub notifications - there is always too many or to few of them).
+This python3 program scans your github pull requests (PR's) and notifies you if there were new or modified PR comments (that one is for people like me who didn't manage to configure gitbub notifications - there is always too many or to few of them).
 
 ### Usage
 

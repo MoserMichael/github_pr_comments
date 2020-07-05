@@ -8,11 +8,11 @@ This python3 program scans your github PR's and notifies you if there were new o
 The prgram scans the github repositories of a particular user once every fifteen minutes (by default).
 It writes an HTML report and pops it up in the default web browser if any PR comments were modified/added/deleted.
 
-The program has some command line options, here is the story:
-
 By default it asks for the github token in an interactive password prompt, however you can set the gigithub token in an environment variable.
 
 By default the program scans your github account once every fifteen minutes.
+
+The program has some command line options, here is the story:
 
 ```
 Usage: periodically checks your github PR's for new comments.

@@ -18,18 +18,11 @@ from github import Github
 #from google.auth.transport.requests import Request
 #from googleapiclient.errors import HttpError
 
-
 STATUS_NEW = 0
 STATUS_NOTMODIFIED = 1
 STATUS_DELETED = 2
 STATUS_MODIFIED = 3
 
-#DB_FILE_NAME = os.path.expanduser("~/.github-notify-db")
-#REPORT_FILE = os.path.expanduser("~/.github-notify-outfile.html")
-#SLEEP_TIME_MINUTES = 15
-#DEBUG_ON = False
-#PASS_TOKEN_ENV = False
-#
 class OpenHtmlInBrowser:
     def __init__(self, file_name):
         self.set_file(file_name)
@@ -107,8 +100,6 @@ class OpenHtmlInBrowser:
 #        except HttpError as error:
 #            print('An error occurred while sending the mail: %s' % error)
 #
-
-
 
 class EntryBaseDB:
     def  __init__(self, scan_number=-1):

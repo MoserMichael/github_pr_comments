@@ -166,6 +166,7 @@ class PullDB(EntryBaseDB):
                 modified = STATUS_NOTMODIFIED
                 if comment.body != github_comment.body:
                     modified = STATUS_MODIFIED
+                    comment.body = github_comment.body:
                     logging.info("\t\t\tmodified comment id %s url %s body %s",\
                             comment.comment_id, comment.url, comment.body)
                 else:

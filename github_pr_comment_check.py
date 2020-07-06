@@ -361,13 +361,15 @@ class Loop:
         lst = Lister(self.user_db, github_access_token, self.ignore_my_comments)
 
         while True:
-            report = lst.scan_repos()
-            if report != "":
-                logging.info("changes in PR comments - new report here")
-                notifier.notify(report)
-            else:
-                logging.info("no changes in PR comments detected")
-
+            try:
+                report = lst.scan_repos()
+                if report != "":
+                    logging.info("changes in PR comments - new report here")
+                    notifier.notify(report)
+                else:
+                    logging.info("no changes in PR comments detected")
+            except:
+                print("error happened: ", sys.exc_info()[0])
             time.sleep(60 * sleep_time_in_minutes)
 
 

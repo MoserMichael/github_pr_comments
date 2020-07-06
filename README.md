@@ -36,6 +36,8 @@ Options:
   -p, --passenv         if pass github token via env. variable GITHUB_TOKEN,
                         defaults to prompt.
   -d, --debug           turn on tracing of script
+  -q, --quiet           ignore comments made by me, only notify on comments
+                        made by others
 
 ```
 

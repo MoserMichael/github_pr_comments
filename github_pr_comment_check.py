@@ -305,7 +305,7 @@ class Lister:
         github = Github(login_or_token="access_token", password=self.access_token)
         self.user = github.get_user()
         if self.ignore_my_comments:
-            self.ignore_comments_by_user = self.user
+            self.ignore_comments_by_user = self.user.login
 
         for repo in self.user.get_repos():
 

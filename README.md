@@ -1,7 +1,7 @@
 
 ## Script for managing github pull request comments.
 
-This python3 program scans your github pull requests (PR's) and notifies you if there were new/modified or deleted PR comments. This script is for people like me who didn't manage to configure github notifications - there is always too many or to few of them.
+This python3 program scans your open github pull request submissions (PR's) and notifies you if there were new/modified or deleted PR comments. This script is for people like me who didn't manage to configure github notifications - there is always too many or to few of them.
 
 ### Usage
 

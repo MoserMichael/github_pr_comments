@@ -124,9 +124,13 @@ class CommentDB(EntryBaseDB):
         self.created_at = github_comment.created_at
         logging.info("\t\t\tnew comment id %s url %s body %s", self.comment_id, self.url, self.body)
 
-    def diff_report(self, msg):
+    def diff_report(self, msg, ignore_comments_by_user):
         if self.status == STATUS_NOTMODIFIED:
             return ""
+
+        if ignore_comments_by_user is not None and self.user.login == ignore_comments_by_user:
+            return ""
+
         report = msg + '&nbsp;<a href="{}">by {} [LINK TO COMMENT]</a> on {}'.\
                format(self.url, self.user.login, self.created_at)
 
@@ -181,7 +185,7 @@ class PullDB(EntryBaseDB):
             if comment.status == STATUS_DELETED:
                 self.comments.remove(comment)
 
-    def diff_report(self, msg):
+    def diff_report(self, msg, ignore_comments_by_user):
         msg += 'pull request <a href="{}">#{} {}<a>&nbsp;'.\
                     format(self.url, self.number, self.title)
         if self.status == STATUS_NEW:
@@ -192,7 +196,7 @@ class PullDB(EntryBaseDB):
 
         report = ""
         for comment in self.comments:
-            report += comment.diff_report(msg)
+            report += comment.diff_report(msg, ignore_comments_by_user)
 
         return report
 
@@ -224,12 +228,12 @@ class RepoDB(EntryBaseDB):
             else:
                 pull.remove_deleted()
 
-    def diff_report(self):
+    def diff_report(self, ignore_comments_by_user):
         msg = '<hr>repo: <a href="{}">{}</a>&nbsp;'.format(self.url, self.repo_name)
 
         report = ""
         for pull in self.pulls:
-            report += pull.diff_report(msg)
+            report += pull.diff_report(msg, ignore_comments_by_user)
 
         return report
 
@@ -276,28 +280,32 @@ class UserDB:
             pickle.dump(repo, pickle_out)
         pickle_out.close()
 
-    def diff_report(self):
+    def diff_report(self, ignore_comments_by_user):
         report = ""
         for repo in self.repos:
-            report += repo.diff_report()
+            report += repo.diff_report(ignore_comments_by_user)
 
         return report
 
 
 
 class Lister:
-    def __init__(self, user_db, access_token):
+    def __init__(self, user_db, access_token, ignore_my_comments):
         super().__init__()
         self.user = None
         self.user_db = user_db
         self.scan_number = 1
         self.access_token = access_token
+        self.ignore_my_comments = ignore_my_comments
+        self.ignore_comments_by_user = None
 
     def scan_repos(self):
         self.scan_number += 1
 
         github = Github(login_or_token="access_token", password=self.access_token)
         self.user = github.get_user()
+        if self.ignore_my_comments:
+            self.ignore_comments_by_user = self.user
 
         for repo in self.user.get_repos():
 
@@ -315,7 +323,7 @@ class Lister:
         self.user_db.mark_deleted(self.scan_number)
 
         # make the report
-        report = self.user_db.diff_report()
+        report = self.user_db.diff_report(self.ignore_comments_by_user)
 
         # remove elements marked for deletion
         self.user_db.remove_deleted()
@@ -340,8 +348,9 @@ class Lister:
             pull_obj.find_or_create_comment(comment, self.scan_number)
 
 class Loop:
-    def __init__(self, db_file_name):
+    def __init__(self, db_file_name, ignore_my_comments):
         self.init_db(db_file_name)
+        self.ignore_my_comments = ignore_my_comments
 
     def init_db(self, db_file_name):
         self.user_db = UserDB(db_file_name)
@@ -349,7 +358,7 @@ class Loop:
     def scan_and_notify(self, github_access_token, notifier, sleep_time_in_minutes):
         self.user_db.load()
 
-        lst = Lister(self.user_db, github_access_token)
+        lst = Lister(self.user_db, github_access_token, self.ignore_my_comments)
 
         while True:
             report = lst.scan_repos()
@@ -400,12 +409,16 @@ The program asks for the github token in a password prompt (can also pass via en
     parser.add_option('-d', '--debug', dest='DEBUG_ON', action='store_true',\
             default=False, \
             help='turn on tracing of script')
+    parser.add_option('-q', '--quiet', dest='QUIET', action='store_true',\
+            default=False, \
+            help='ignore comments made by me, only notify on comments made by others')
 
     (options, _) = parser.parse_args(sys.argv[1:])
 
-#    print("SLEEP_TIME_MINUTES {} DB_FILE_NAME {} REPORT {} DEBUG_ON {} PASS_TOKEN_ENV {}".\ A
-#            format(options.SLEEP_TIME_MINUTES, options.DB_FILE_NAME, opsiont.REPORT_FILE, \
-#                   options.DEBUG_ON, options.PASS_TOKEN_ENV))
+#    print("QUIET {} SLEEP_TIME_MINUTES {} DB_FILE_NAME {} REPORT {}"\
+#           "DEBUG_ON {} PASS_TOKEN_ENV {}".\
+#            format(options.QUIET, options.SLEEP_TIME_MINUTES, options.DB_FILE_NAME,
+#                   optiont.REPORT_FILE, options.DEBUG_ON, options.PASS_TOKEN_ENV))
 #
     return options
 
@@ -426,7 +439,7 @@ def main():
     #notify = GmailClientLibrary()
     notify = OpenHtmlInBrowser(options.REPORT_FILE)
 
-    loop = Loop(options.DB_FILE_NAME)
+    loop = Loop(options.DB_FILE_NAME, options.QUIET)
     loop.scan_and_notify(token, notify, options.SLEEP_TIME_MINUTES)
 
 

@@ -394,7 +394,7 @@ The first iteration will give you a full list of all prs, subsequent iterations 
 The program asks for the github token in a password prompt (can also pass via env. variable)
 '''
 
-    parser = optparse.OptionParser(usage=usage)
+    parser = optparse.OptionParser(description=usage)
 
     parser.add_option('-t', '--time', type='int', dest='SLEEP_TIME_MINUTES',\
                 default=15, \

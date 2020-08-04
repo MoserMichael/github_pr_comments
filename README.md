@@ -59,4 +59,8 @@ Now you should be ready to run the script in this repository.
 I tried to used googleapi in order to send emails to myself, but that didn't work out.
 Anyway, poping up a report in the current browser is good enough for me.
 
+### what I learned from all this
+
+i didn't learn too much in terms of technology, more in the area of sociology: as part of the coronavirus crisis most companies started remote work/ work from home, Now my naive hope would be that office politics would be less pronounced and have less of a chance; but reality seems to be different and there is always to we to continue the show with other means. Sad.
+
 
